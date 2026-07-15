@@ -20,7 +20,7 @@ BuildRequires:  kf6-kcoreaddons-devel >= 6.10
 BuildRequires:  kf6-kcolorscheme-devel >= 6.10
 BuildRequires:  kf6-kconfig-devel >= 6.10
 BuildRequires:  kf6-kcmutils-devel >= 6.10
-BuildRequires:  kf6-kframeworkintegration-devel >= 6.10
+BuildRequires:  kf6-frameworkintegration-devel >= 6.10
 BuildRequires:  kf6-kguiaddons-devel >= 6.10
 BuildRequires:  kf6-ki18n-devel >= 6.10
 BuildRequires:  kf6-kiconthemes-devel >= 6.10
@@ -102,5 +102,5 @@ DESTDIR=%{buildroot} cmake --install %{__cmake_builddir} --component Decoration
 %license COPYING
 
 %changelog
-* Wed Jul 15 2026 Lingmo OS Packaging Team <packages@lingmo.org> - 0.5.25-1
+* Wed Jul 15 2026 Lingmo OS Team <team@lingmo.org> - 0.5.25-1
 - Initial Qt 6 and KWin 6 packaging

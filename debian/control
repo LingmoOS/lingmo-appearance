@@ -1,7 +1,7 @@
 Source: lingmo-appearance
 Section: kde
 Priority: optional
-Maintainer: Lingmo OS Packaging Team <packages@lingmo.org>
+Maintainer: Lingmo OS Team <team@lingmo.org>
 Build-Depends: debhelper-compat (= 13),
                cmake (>= 3.16),
                extra-cmake-modules (>= 6.10.0),
@@ -12,7 +12,7 @@ Build-Depends: debhelper-compat (= 13),
                libkf6coreaddons-dev (>= 6.10.0),
                libkf6colorscheme-dev (>= 6.10.0),
                libkf6config-dev (>= 6.10.0),
-               libkf6frameworkintegration-dev (>= 6.10.0),
+               libkf6style-dev (>= 6.10.0),
                libkf6guiaddons-dev (>= 6.10.0),
                libkf6i18n-dev (>= 6.10.0),
                libkf6iconthemes-dev (>= 6.10.0),

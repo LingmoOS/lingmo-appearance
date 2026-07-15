@@ -1,5 +1,5 @@
-lingmo-appearance (0.5.25-1) unstable; urgency=medium
+lingmo-appearance (0.5.25.lingmo.1) unstable; urgency=medium
 
   * Initial Qt 6, KDecoration3, Debian 13 and RPM packaging.
 
- -- Lingmo OS Packaging Team <packages@lingmo.org>  Wed, 15 Jul 2026 12:00:00 +0800
+ -- Lingmo OS Team <team@lingmo.org>  Wed, 15 Jul 2026 18:00:00 +0800
