@@ -31,8 +31,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(CMakePackageConfigHelpers)
 include(ECMInstallIcons)
 include(KDECompilerSettings NO_POLICY_SCOPE)
-include(KDEClangFormat)
+
+# Formatting targets and Git hooks are developer conveniences. Source-package
+# builds (including Debian CI) intentionally do not contain a .git directory.
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    include(KDEClangFormat)
     include(KDEGitCommitHooks)
 endif()
 

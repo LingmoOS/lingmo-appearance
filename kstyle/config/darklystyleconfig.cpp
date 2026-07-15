@@ -446,7 +446,7 @@ void StyleConfig::load()
     _tabUseHighlightColor->setChecked(StyleConfigData::tabUseHighlightColor());
     _tabUseBrighterCloseIcon->setChecked(StyleConfigData::tabUseBrighterCloseIcon());
     _disableDolphinUrlNavigatorBackground->setChecked(StyleConfigData::disableDolphinUrlNavigatorBackground());
-    _versionNumber->setText(DARKLY_VERSION_STRING);
+    _versionNumber->setText(LINGMOAPPEARANCE_VERSION_STRING);
     _tabsHeight->setValue(StyleConfigData::tabsHeight());
 }
 
