@@ -47,9 +47,7 @@ jobs:
       - name: Install declared build dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          mk-build-deps --install --remove \
-            --tool 'apt-get --no-install-recommends -y -o Debug::pkgProblemResolver=yes' \
-            debian/control
+          apt build-dep -y ./
 
       - name: Build binary Debian packages
         run: dpkg-buildpackage -us -uc -b
