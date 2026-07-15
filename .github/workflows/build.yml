@@ -1,0 +1,168 @@
+name: LingmoAppearance packages
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*"
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Package builds only need to fetch the repository contents.
+permissions:
+  contents: read
+
+concurrency:
+  group: lingmo-appearance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  metadata:
+    name: Validate source metadata
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Validate JSON metadata and package versions
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          for name in (
+              "kstyle/darkly.json",
+              "kstyle/config/darklystyleconfig.json",
+              "kdecoration/darkly.json",
+              "kdecoration/config/kcm_darklydecoration.json",
+          ):
+              json.loads(Path(name).read_text(encoding="utf-8"))
+
+          version = Path("VERSION").read_text(encoding="utf-8").strip()
+          debian_changelog = Path("debian/changelog").read_text(encoding="utf-8")
+          rpm_spec = Path("packaging/rpm/lingmo-appearance.spec").read_text(encoding="utf-8")
+
+          assert re.search(rf"^lingmo-appearance \({re.escape(version)}-", debian_changelog), (
+              "debian/changelog version does not match VERSION"
+          )
+          assert re.search(rf"^Version:\s+{re.escape(version)}$", rpm_spec, re.MULTILINE), (
+              "RPM spec version does not match VERSION"
+          )
+          assert re.search(r"project\(\s*LingmoAppearance", Path("CMakeLists.txt").read_text(encoding="utf-8"))
+          PY
+
+  debian:
+    name: Debian 13 packages
+    needs: metadata
+    runs-on: ubuntu-24.04
+    container: debian:trixie
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Install Debian packaging tools
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential \
+            ca-certificates \
+            devscripts \
+            dpkg-dev \
+            equivs \
+            git \
+            gnupg \
+            lintian
+
+      - name: Install declared build dependencies
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          mk-build-deps --install --remove \
+            --tool 'apt-get --no-install-recommends -y -o Debug::pkgProblemResolver=yes' \
+            debian/control
+
+      - name: Build binary Debian packages
+        run: dpkg-buildpackage -us -uc -b
+
+      - name: Collect Debian packages
+        if: always()
+        run: |
+          mkdir -p artifacts/debian
+          find "$GITHUB_WORKSPACE" -maxdepth 1 -type f \
+            \( -name '*.deb' -o -name '*.buildinfo' -o -name '*.changes' \) \
+            -print0 | xargs -0 -r cp -t artifacts/debian
+          find artifacts/debian -maxdepth 1 -type f -printf '%f\n' | sort
+
+      - name: Upload Debian packages
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lingmo-appearance-debian-13-${{ github.sha }}
+          path: artifacts/debian
+          if-no-files-found: warn
+          retention-days: 14
+
+  rpm:
+    name: Fedora RPM packages
+    needs: metadata
+    runs-on: ubuntu-24.04
+    container: fedora:43
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Install RPM packaging tools
+        run: |
+          dnf -y install dnf-plugins-core rpm-build rpmdevtools tar xz
+
+      - name: Install declared build dependencies
+        run: dnf -y builddep packaging/rpm/lingmo-appearance.spec
+
+      - name: Prepare RPM source archive
+        run: |
+          version="$(tr -d '\r\n' < VERSION)"
+          topdir="$HOME/rpmbuild"
+          mkdir -p "$topdir/SOURCES" "$topdir/SPECS"
+          tar --create --xz \
+            --file "$topdir/SOURCES/lingmo-appearance-${version}.tar.xz" \
+            --directory "$GITHUB_WORKSPACE" \
+            --exclude-vcs \
+            --exclude='./build' \
+            --exclude='./artifacts' \
+            --transform "s,^\\./,lingmo-appearance-${version}/," \
+            .
+          cp packaging/rpm/lingmo-appearance.spec "$topdir/SPECS/"
+
+      - name: Build RPM packages
+        run: rpmbuild -ba "$HOME/rpmbuild/SPECS/lingmo-appearance.spec"
+
+      - name: Collect RPM packages
+        if: always()
+        run: |
+          mkdir -p artifacts/rpm
+          find "$HOME/rpmbuild/RPMS" "$HOME/rpmbuild/SRPMS" -type f -name '*.rpm' \
+            -print0 2>/dev/null | xargs -0 -r cp -t artifacts/rpm
+          find artifacts/rpm -maxdepth 1 -type f -printf '%f\n' | sort
+
+      - name: Upload RPM packages
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lingmo-appearance-fedora-43-${{ github.sha }}
+          path: artifacts/rpm
+          if-no-files-found: warn
+          retention-days: 14
