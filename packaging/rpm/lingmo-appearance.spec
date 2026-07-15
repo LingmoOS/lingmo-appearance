@@ -91,7 +91,7 @@ DESTDIR=%{buildroot} cmake --install %{__cmake_builddir} --component Decoration
 %files settings
 %{_bindir}/lingmo-appearance-settings6
 %{_qt6_plugindir}/kstyle_config/lingmostyleconfig.so
-%{_datadir}/icons/hicolor/*/apps/sc-apps-lingmo-appearance-settings.svgz
+%{_datadir}/icons/hicolor/scalable/apps/lingmo-appearance-settings.svgz
 
 %files decoration
 %{_qt6_plugindir}/org.kde.kdecoration3/org.lingmo.appearance.so
