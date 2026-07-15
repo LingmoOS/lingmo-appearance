@@ -18,8 +18,10 @@ override_dh_auto_configure:
 override_dh_auto_build:
 	dh_auto_build --builddirectory=debian/build
 
+# BUILD_TESTING is explicitly disabled for the binary package build.
+# Do not ask Ninja for a non-existent test target.
 override_dh_auto_test:
-	dh_auto_test --builddirectory=debian/build
+	@:
 
 override_dh_auto_install:
 	cmake --install debian/build --component Common --prefix /usr --destdir $(CURDIR)/debian/lingmo-appearance-common
