@@ -17,7 +17,7 @@ Build-Depends: debhelper-compat (= 13),
                libkf6i18n-dev (>= 6.10.0),
                libkf6iconthemes-dev (>= 6.10.0),
                libkf6kcmutils-dev (>= 6.10.0),
-               libkf6kirigami-dev (>= 6.10.0),
+               libkirigami-dev (>= 6.10.0),
                libkf6windowsystem-dev (>= 6.10.0)
 Standards-Version: 4.7.0
 Rules-Requires-Root: no
