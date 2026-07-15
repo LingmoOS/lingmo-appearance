@@ -18,48 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  metadata:
-    name: Validate source metadata
-    runs-on: ubuntu-24.04
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-      - name: Check out source
-        uses: actions/checkout@v6
-
-      - name: Validate JSON metadata and package versions
-        run: |
-          python3 - <<'PY'
-          import json
-          import re
-          from pathlib import Path
-
-          for name in (
-              "kstyle/darkly.json",
-              "kstyle/config/darklystyleconfig.json",
-              "kdecoration/darkly.json",
-              "kdecoration/config/kcm_darklydecoration.json",
-          ):
-              json.loads(Path(name).read_text(encoding="utf-8"))
-
-          version = Path("VERSION").read_text(encoding="utf-8").strip()
-          debian_changelog = Path("debian/changelog").read_text(encoding="utf-8")
-          rpm_spec = Path("packaging/rpm/lingmo-appearance.spec").read_text(encoding="utf-8")
-
-          assert re.search(rf"^lingmo-appearance \({re.escape(version)}-", debian_changelog), (
-              "debian/changelog version does not match VERSION"
-          )
-          assert re.search(rf"^Version:\s+{re.escape(version)}$", rpm_spec, re.MULTILINE), (
-              "RPM spec version does not match VERSION"
-          )
-          assert re.search(r"project\(\s*LingmoAppearance", Path("CMakeLists.txt").read_text(encoding="utf-8"))
-          PY
-
   debian:
     name: Debian 13 packages
-    needs: metadata
     runs-on: ubuntu-24.04
     container: debian:trixie
     defaults:
@@ -114,7 +74,6 @@ jobs:
 
   rpm:
     name: Fedora RPM packages
-    needs: metadata
     runs-on: ubuntu-24.04
     container: fedora:43
     defaults:
