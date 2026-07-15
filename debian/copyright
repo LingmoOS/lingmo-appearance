@@ -1,0 +1,20 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: LingmoAppearance
+Upstream-Contact: Lingmo OS Packaging Team <packages@lingmo.org>
+Source: https://github.com/LingmoOS/lingmo-appearance
+Comment:
+ This package is a Lingmo adaptation of Darkly and its Lightly/KDE-derived
+ code. Upstream author and copyright notices in individual source files are
+ preserved.
+
+Files: *
+Copyright: 2014-2026 Hugo Pereira Da Costa, Andrew Lake, Ken Vermette,
+           Bali10050 and contributors
+License: GPL-2+
+
+License: GPL-2+
+ This package is distributed under the GNU General Public License, version 2
+ or later.
+
+ On Debian systems, the complete text of the GNU General Public License
+ version 2 can be found in /usr/share/common-licenses/GPL-2.

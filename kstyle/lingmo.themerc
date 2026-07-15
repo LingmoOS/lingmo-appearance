@@ -1,0 +1,6 @@
+[Misc]
+Name=Lingmo
+ConfigPage=kstyle_config/lingmostyleconfig
+Comment=Adaptive widget style for Qt applications
+[KDE]
+WidgetStyle=Lingmo

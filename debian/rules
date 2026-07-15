@@ -1,0 +1,28 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+override_dh_auto_configure:
+	dh_auto_configure --builddirectory=debian/build -- \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DBUILD_QT5=OFF \
+		-DBUILD_QT6=ON \
+		-DBUILD_SETTINGS=ON \
+		-DBUILD_DECORATION=ON \
+		-DBUILD_COLOR_SCHEMES=ON \
+		-DBUILD_TESTING=OFF
+
+override_dh_auto_build:
+	dh_auto_build --builddirectory=debian/build
+
+override_dh_auto_test:
+	dh_auto_test --builddirectory=debian/build
+
+override_dh_auto_install:
+	cmake --install debian/build --component Common --prefix /usr --destdir $(CURDIR)/debian/lingmo-appearance-common
+	cmake --install debian/build --component Qt6Style --prefix /usr --destdir $(CURDIR)/debian/lingmo-appearance-qt6
+	cmake --install debian/build --component Settings --prefix /usr --destdir $(CURDIR)/debian/lingmo-appearance-settings
+	cmake --install debian/build --component Decoration --prefix /usr --destdir $(CURDIR)/debian/lingmo-appearance-decoration

@@ -1,0 +1,61 @@
+Source: lingmo-appearance
+Section: kde
+Priority: optional
+Maintainer: Lingmo OS Packaging Team <packages@lingmo.org>
+Build-Depends: debhelper-compat (= 13),
+               cmake (>= 3.16),
+               extra-cmake-modules (>= 6.10.0),
+               ninja-build,
+               qt6-base-dev (>= 6.7.0),
+               qt6-declarative-dev (>= 6.7.0),
+               libkdecorations3-dev,
+               libkf6coreaddons-dev (>= 6.10.0),
+               libkf6colorscheme-dev (>= 6.10.0),
+               libkf6config-dev (>= 6.10.0),
+               libkf6frameworkintegration-dev (>= 6.10.0),
+               libkf6guiaddons-dev (>= 6.10.0),
+               libkf6i18n-dev (>= 6.10.0),
+               libkf6iconthemes-dev (>= 6.10.0),
+               libkf6kcmutils-dev (>= 6.10.0),
+               libkf6kirigami-dev (>= 6.10.0),
+               libkf6windowsystem-dev (>= 6.10.0)
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://github.com/LingmoOS/lingmo-appearance
+
+Package: lingmo-appearance-common
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: shared appearance data for Lingmo applications
+ Shared color schemes and package metadata used by LingmoAppearance.
+
+Package: lingmo-appearance-qt6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends}, lingmo-appearance-common (= ${binary:Version})
+Description: Lingmo Qt 6 widget style plugin
+ Qt 6 QStyle plugin registered under the Lingmo style key.
+
+Package: lingmo-appearance-settings
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, lingmo-appearance-qt6 (= ${binary:Version})
+Description: Lingmo appearance settings application and widget-style KCM
+ Provides the Qt 6 widget-style configuration module and settings application.
+
+Package: lingmo-appearance-decoration
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, lingmo-appearance-common (= ${binary:Version})
+Description: Lingmo KWin 6 window decoration
+ KDecoration3 plugin and configuration module for KWin 6.
+
+Package: lingmo-appearance
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         lingmo-appearance-common (= ${binary:Version}),
+         lingmo-appearance-qt6 (= ${binary:Version}),
+         lingmo-appearance-settings (= ${binary:Version}),
+         lingmo-appearance-decoration (= ${binary:Version})
+Description: default Lingmo desktop appearance
+ Metapackage that installs the Qt 6 style, settings and KWin decoration.
