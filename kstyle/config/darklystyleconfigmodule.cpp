@@ -22,7 +22,7 @@
 
 #include <KPluginFactory>
 
-K_PLUGIN_CLASS_WITH_JSON(Darkly::ConfigurationModule, "darklystyleconfig.json")
+K_PLUGIN_CLASS_WITH_JSON(Darkly::ConfigurationModule, "lingmostyleconfig.json")
 
 #include "darklystyleconfigmodule.moc"
 

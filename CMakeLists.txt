@@ -32,7 +32,9 @@ include(CMakePackageConfigHelpers)
 include(ECMInstallIcons)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(KDEClangFormat)
-include(KDEGitCommitHooks)
+if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    include(KDEGitCommitHooks)
+endif()
 
 include(GtkUpdateIconCache)
 
@@ -198,6 +200,8 @@ endif()
 # add clang-format target for all our real source files
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
-kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
+if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
+endif()
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
